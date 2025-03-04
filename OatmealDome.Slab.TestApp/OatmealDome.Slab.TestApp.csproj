@@ -8,4 +8,8 @@
         <RootNamespace>OatmealDome.Slab.TestApp</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OatmealDome.Slab\OatmealDome.Slab.csproj" />
+    </ItemGroup>
+
 </Project>
