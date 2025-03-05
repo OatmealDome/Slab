@@ -30,7 +30,12 @@ public abstract class SlabApplication
         _host = _builder.Build();
         _host.Run();
     }
-    
+
+    protected void RegisterConfiguration<T>(string sectionName) where T : class
+    {
+        _builder.Services.Configure<T>(_builder.Configuration.GetSection(sectionName));
+    }
+
     protected void RegisterHostedService<T>() where T : class, IHostedService
     {
         _builder.Services.AddHostedService<T>();
