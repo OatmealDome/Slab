@@ -1,8 +1,8 @@
 namespace OatmealDome.Slab.TestApp;
 
-internal sealed class TestApplication : SlabApplication
+internal sealed class TestApplication : SlabConsoleApplication
 {
-    protected override void Setup()
+    protected override void BuildApplication()
     {
         RegisterConfiguration<TestConfiguration>("Test");
         
