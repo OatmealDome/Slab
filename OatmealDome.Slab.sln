@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OatmealDome.Slab", "Oatmeal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OatmealDome.Slab.TestApp", "OatmealDome.Slab.TestApp\OatmealDome.Slab.TestApp.csproj", "{D477D00C-3402-4D87-B60F-CE917C0AFA6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OatmealDome.Slab.Mongo", "OatmealDome.Slab.Mongo\OatmealDome.Slab.Mongo.csproj", "{DBC649EF-E5E3-4F71-A066-AA32D3D77F76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D477D00C-3402-4D87-B60F-CE917C0AFA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D477D00C-3402-4D87-B60F-CE917C0AFA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D477D00C-3402-4D87-B60F-CE917C0AFA6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC649EF-E5E3-4F71-A066-AA32D3D77F76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC649EF-E5E3-4F71-A066-AA32D3D77F76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC649EF-E5E3-4F71-A066-AA32D3D77F76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC649EF-E5E3-4F71-A066-AA32D3D77F76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
