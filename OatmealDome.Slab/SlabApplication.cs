@@ -34,7 +34,9 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
     protected void RegisterHostedService<T>() where T : class, IHostedService
     {
-        _builder!.Services.AddHostedService<T>();
+        _builder!.Services
+            .AddSingleton<T>()
+            .AddHostedService(services => services.GetService<T>()!);
     }
     
     protected abstract TBuilder CreateBuilder(string[]? args);
