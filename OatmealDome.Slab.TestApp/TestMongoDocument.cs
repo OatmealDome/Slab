@@ -1,15 +1,12 @@
 using MongoDB.Bson;
+using OatmealDome.Slab.Mongo;
 
 namespace OatmealDome.Slab.TestApp;
 
-public class TestMongoDocument
+public class TestMongoDocument : SlabMongoDocument
 {
-    public ObjectId _id
-    {
-        get;
-        set;
-    } = ObjectId.Empty;
-
+    public const int LatestSchemaVersion = 1;
+    
     public string Key
     {
         get;

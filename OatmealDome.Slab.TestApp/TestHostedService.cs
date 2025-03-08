@@ -25,6 +25,7 @@ internal sealed class TestHostedService : IHostedService
 
         IMongoCollection<TestMongoDocument> documents = _mongoService.GetCollection<TestMongoDocument>("test_collection");
         TestMongoDocument? document = documents.AsQueryable().FirstOrDefault();
+        _logger.LogInformation("TestMongoService -> _id = {_id}",  document?._id);
         _logger.LogInformation("TestMongoService -> Key = {value}",  document?.Key);
         
         return Task.CompletedTask;

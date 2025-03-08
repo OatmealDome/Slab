@@ -29,7 +29,7 @@ public abstract class SlabMongoService : IHostedService
         return Task.CompletedTask;
     }
 
-    public IMongoCollection<T> GetCollection<T>(string collectionName)
+    public IMongoCollection<T> GetCollection<T>(string collectionName) where T : SlabMongoDocument
     {
         return _database.GetCollection<T>(collectionName);
     }
