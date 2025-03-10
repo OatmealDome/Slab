@@ -27,6 +27,7 @@ internal sealed class TestHostedService : IHostedService
         TestMongoDocument? document = documents.AsQueryable().FirstOrDefault();
         _logger.LogInformation("TestMongoService -> _id = {_id}",  document?._id);
         _logger.LogInformation("TestMongoService -> Key = {value}",  document?.Key);
+        _logger.LogInformation("TestMongoService -> NewKey = {value}",  document?.NewKey);
         
         return Task.CompletedTask;
     }
