@@ -14,7 +14,7 @@ public class TestJob : SlabJob
     
     protected override Task Run(IJobExecutionContext context)
     {
-        throw new Exception("Test exception");
+        // throw new Exception("Test exception");
         _logger.LogInformation("TestJob executed");
         
         return Task.CompletedTask;
