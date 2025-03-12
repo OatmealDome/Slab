@@ -1,6 +1,10 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Slack;
 
 namespace OatmealDome.Slab;
 
@@ -21,6 +25,25 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
     internal override void Run(string[]? args)
     {
         _builder = CreateBuilder(args);
+        
+        SlabSerilogConfiguration slabLoggerConfiguration =
+            _builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>()!;
+
+        LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
+            .WriteTo.Logger(Log.Logger);
+            
+        string slackWebhookUrl = slabLoggerConfiguration.SlackWebhookUrl;
+        if (slackWebhookUrl != SlabSerilogConfiguration.DefaultSlackWebhookUrl)
+        {
+            loggerConfiguration = loggerConfiguration.WriteTo.Async(c =>
+                c.Slack(slackWebhookUrl, restrictedToMinimumLevel: LogEventLevel.Warning));
+        }
+        
+        Log.Logger = loggerConfiguration.CreateLogger();
+
+        _builder.Services.AddSerilog();
+        
+        Log.Information("Building application");
 
         BuildApplication();
         
@@ -44,7 +67,11 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
         _host = CreateHost(_builder);
         
+        Log.Information("Setting up application");
+        
         SetupApplication(_host);
+        
+        Log.Warning($"{this.GetType().Name} is starting up");
         
         _host.Run();
     }

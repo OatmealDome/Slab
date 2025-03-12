@@ -1,11 +1,27 @@
 using System.Diagnostics;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace OatmealDome.Slab;
 
 public static class SlabEntryPoint
 {
+    private const string LogFormat =
+        "[{Timestamp:MM-dd-yyyy HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
+    
     public static void RunApplication<T>(string[]? args) where T : SlabApplicationBase, new()
     {
+        // Configure Serilog now. We do this as early in the start up process to ensure logging is always available.
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .MinimumLevel.Information()
+            .WriteTo.Async(c => c.Console(outputTemplate: LogFormat, theme: AnsiConsoleTheme.Sixteen))
+            .WriteTo.Async(c =>
+                c.File("Logs/.log", outputTemplate: LogFormat, rollingInterval: RollingInterval.Day))
+            .CreateLogger();
+        
+        Log.Information("Entering RunApplication");
+        
 #if DEBUG
         DateTime startTime = DateTime.UtcNow;
 
