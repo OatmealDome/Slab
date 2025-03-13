@@ -20,14 +20,14 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
     {
         TBuilder builder = CreateBuilder(args);
         
-        SlabSerilogConfiguration slabLoggerConfiguration =
-            builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>()!;
+        SlabSerilogConfiguration? slabLoggerConfiguration =
+            builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>();
 
         LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
             .WriteTo.Logger(Log.Logger);
             
-        string slackWebhookUrl = slabLoggerConfiguration.SlackWebhookUrl;
-        if (slackWebhookUrl != SlabSerilogConfiguration.DefaultSlackWebhookUrl)
+        string? slackWebhookUrl = slabLoggerConfiguration?.SlackWebhookUrl;
+        if (slabLoggerConfiguration != null && slackWebhookUrl != SlabSerilogConfiguration.DefaultSlackWebhookUrl)
         {
             loggerConfiguration = loggerConfiguration.WriteTo.Async(c =>
                 c.Slack(slackWebhookUrl, restrictedToMinimumLevel: LogEventLevel.Warning));
