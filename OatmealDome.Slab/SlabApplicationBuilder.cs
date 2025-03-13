@@ -23,7 +23,7 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
 
     public void RegisterHostedService<T>() where T : class, IHostedService
     {
-        _hostBuilder!.Services
+        _hostBuilder.Services
             .AddSingleton<T>()
             .AddHostedService(services => services.GetService<T>()!);
     }
