@@ -7,10 +7,9 @@ internal sealed class TestApplication : SlabConsoleApplication
 {
     protected override void BuildApplication(ISlabApplicationBuilder builder)
     {
-        builder.RegisterConfiguration<TestConfiguration>("Test");
-        builder.RegisterConfiguration<SlabMongoConfiguration>("Mongo");
+        builder.RegisterMongo<TestMongoService>();
         
-        builder.RegisterHostedService<TestMongoService>();
+        builder.RegisterConfiguration<TestConfiguration>("Test");
         builder.RegisterHostedService<TestHostedService>();
 
         builder.RegisterJob<TestJob>(SlabJob.CreateJobKey("TestJob"), t => t
