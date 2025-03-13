@@ -11,7 +11,7 @@ namespace OatmealDome.Slab;
 public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
     where TBuilder : IHostApplicationBuilder where THost : IHost
 {
-    internal SlabApplication()
+    protected SlabApplication()
     {
         //
     }
