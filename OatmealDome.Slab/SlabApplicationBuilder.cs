@@ -21,6 +21,11 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
         _hostBuilder.Services.Configure<T>(_hostBuilder.Configuration.GetSection(sectionName));
     }
 
+    public void RegisterSingleton<T>() where T : class
+    {
+        _hostBuilder.Services.AddSingleton<T>();
+    }
+
     public void RegisterHostedService<T>() where T : class, IHostedService
     {
         _hostBuilder.Services

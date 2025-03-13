@@ -9,12 +9,14 @@ internal sealed class TestHostedService : IHostedService
 {
     private readonly ILogger<TestHostedService> _logger;
     private readonly TestConfiguration _settings;
+    private readonly TestSingletonService _singleton;
     private readonly TestMongoService _mongoService;
     
-    public TestHostedService(ILogger<TestHostedService> logger, IOptions<TestConfiguration> settings, TestMongoService mongoService)
+    public TestHostedService(ILogger<TestHostedService> logger, IOptions<TestConfiguration> settings, TestSingletonService singleton, TestMongoService mongoService)
     {
         _logger = logger;
         _settings = settings.Value;
+        _singleton = singleton;
         _mongoService = mongoService;
     }
     
@@ -22,6 +24,8 @@ internal sealed class TestHostedService : IHostedService
     {
         _logger.LogInformation("TestHostedService -> StartAsync");
         _logger.LogInformation("TestConfiguration -> Key = {value}", _settings.Key);
+        
+        _logger.LogInformation("TestSingletonService.TestMethod() -> {value}", _singleton.TestMethod());
 
         IMongoCollection<TestMongoDocument> documents = _mongoService.GetCollection<TestMongoDocument>("test_collection");
         TestMongoDocument? document = documents.AsQueryable().FirstOrDefault();

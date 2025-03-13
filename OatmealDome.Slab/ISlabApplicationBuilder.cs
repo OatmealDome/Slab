@@ -7,6 +7,8 @@ public interface ISlabApplicationBuilder
 {
     void RegisterConfiguration<T>(string sectionName) where T : class, new();
 
+    void RegisterSingleton<T>() where T : class;
+
     void RegisterHostedService<T>() where T : class, IHostedService;
 
     void RegisterJob<T>(JobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob;

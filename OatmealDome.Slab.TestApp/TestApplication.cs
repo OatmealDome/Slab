@@ -9,6 +9,8 @@ internal sealed class TestApplication : SlabConsoleApplication
     {
         builder.RegisterMongo<TestMongoService>();
         
+        builder.RegisterSingleton<TestSingletonService>();
+        
         builder.RegisterConfiguration<TestConfiguration>("Test");
         builder.RegisterHostedService<TestHostedService>();
 
