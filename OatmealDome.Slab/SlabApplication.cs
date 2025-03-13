@@ -11,12 +11,6 @@ namespace OatmealDome.Slab;
 public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
     where TBuilder : IHostApplicationBuilder where THost : IHost
 {
-    private TBuilder? _builder;
-    private THost? _host;
-
-    private List<(Type, JobKey, Action<ITriggerConfigurator>)> _registeredJobs =
-        new List<(Type, JobKey, Action<ITriggerConfigurator>)>();
-
     internal SlabApplication()
     {
         //
@@ -24,10 +18,10 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
     internal override void Run(string[]? args)
     {
-        _builder = CreateBuilder(args);
+        TBuilder builder = CreateBuilder(args);
         
         SlabSerilogConfiguration slabLoggerConfiguration =
-            _builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>()!;
+            builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>()!;
 
         LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
             .WriteTo.Logger(Log.Logger);
@@ -41,15 +35,16 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         
         Log.Logger = loggerConfiguration.CreateLogger();
 
-        _builder.Services.AddSerilog();
+        builder.Services.AddSerilog();
         
         Log.Information("Building application");
 
-        BuildApplication();
+        SlabApplicationBuilder applicationBuilder = new SlabApplicationBuilder(builder);
+        BuildApplication(applicationBuilder);
         
-        _builder.Services.AddQuartz(q =>
+        builder.Services.AddQuartz(q =>
         {
-            foreach ((Type type, JobKey jobKey, Action<ITriggerConfigurator> configurator) jobInfo in _registeredJobs)
+            foreach ((Type type, JobKey jobKey, Action<ITriggerConfigurator> configurator) jobInfo in applicationBuilder.RegisteredJobs)
             {
                 q.AddJob(jobInfo.type, jobInfo.jobKey);
                 q.AddTrigger(t =>
@@ -60,51 +55,27 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         });
         
         // Quartz.Extensions.Hosting hosting
-        _builder.Services.AddQuartzHostedService(options =>
+        builder.Services.AddQuartzHostedService(options =>
         {
             options.WaitForJobsToComplete = true;
         });
 
-        _host = CreateHost(_builder);
+        THost host = CreateHost(builder);
         
         Log.Information("Setting up application");
         
-        SetupApplication(_host);
+        SetupApplication(host);
         
         Log.Warning($"{this.GetType().Name} is starting up");
         
-        _host.Run();
-    }
-
-    protected void RegisterConfiguration<T>(string sectionName) where T : class
-    {
-        _builder!.Services.Configure<T>(_builder.Configuration.GetSection(sectionName));
-    }
-
-    protected void RegisterHostedService<T>() where T : class, IHostedService
-    {
-        _builder!.Services
-            .AddSingleton<T>()
-            .AddHostedService(services => services.GetService<T>()!);
-    }
-
-    protected void RegisterJob<T>(JobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob
-    {
-        Type jobType = typeof(T);
-
-        if (jobType == typeof(SlabJob))
-        {
-            throw new SlabException("Specified class must be subclass of SlabJob");
-        }
-        
-        _registeredJobs.Add((typeof(T), jobKey, configurator));
+        host.Run();
     }
     
     protected abstract TBuilder CreateBuilder(string[]? args);
     
     protected abstract THost CreateHost(TBuilder builder);
     
-    protected abstract void BuildApplication();
+    protected abstract void BuildApplication(ISlabApplicationBuilder appBuilder);
     
     protected abstract void SetupApplication(THost host);
 }
