@@ -1,7 +1,7 @@
 using OatmealDome.Slab.Mongo;
 using Quartz;
 
-namespace OatmealDome.Slab.TestApp;
+namespace OatmealDome.Slab.TestConsoleApp;
 
 internal sealed class TestApplication : SlabConsoleApplication
 {

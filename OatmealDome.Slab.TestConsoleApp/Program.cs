@@ -1,4 +1,4 @@
 ﻿using OatmealDome.Slab;
-using OatmealDome.Slab.TestApp;
+using OatmealDome.Slab.TestConsoleApp;
 
 SlabEntryPoint.RunApplication<TestApplication>(args);

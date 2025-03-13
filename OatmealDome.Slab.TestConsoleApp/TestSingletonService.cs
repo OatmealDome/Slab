@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace OatmealDome.Slab.TestApp;
+namespace OatmealDome.Slab.TestConsoleApp;
 
 public class TestSingletonService
 {

@@ -1,4 +1,4 @@
-namespace OatmealDome.Slab.TestApp;
+namespace OatmealDome.Slab.TestConsoleApp;
 
 internal sealed class TestConfiguration
 {

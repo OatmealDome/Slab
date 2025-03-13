@@ -1,6 +1,6 @@
 using OatmealDome.Slab.Mongo;
 
-namespace OatmealDome.Slab.TestApp;
+namespace OatmealDome.Slab.TestConsoleApp;
 
 public class TestMongoDocument : SlabMongoDocument
 {

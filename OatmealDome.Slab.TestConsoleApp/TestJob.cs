@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Quartz;
 
-namespace OatmealDome.Slab.TestApp;
+namespace OatmealDome.Slab.TestConsoleApp;
 
 public class TestJob : SlabJob
 {
