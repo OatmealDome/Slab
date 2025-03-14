@@ -24,6 +24,11 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
     internal override void Run(string[]? args)
     {
+        using (LogContext.PushProperty("SourceContext", GetType().FullName))
+        {
+            Log.Warning($"{ApplicationName} is starting up");
+        }
+
         TBuilder builder = CreateBuilder(args);
         
         SlabSerilogConfiguration? slabLoggerConfiguration =
@@ -77,10 +82,10 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         }
 
         SetupApplication(host);
-
+        
         using (LogContext.PushProperty("SourceContext", GetType().FullName))
         {
-            Log.Warning($"{ApplicationName} is starting up");
+            Log.Information("Running application");
         }
 
         host.Run();
