@@ -11,9 +11,9 @@ public class TestMongoService : SlabMongoService
         //
     }
 
-    protected override void Setup()
+    protected override void Setup(ISlabMongoCollectionsBuilder collectionsBuilder)
     {
-        RegisterCollection<TestMongoDocument>("test_collection");
-        RegisterMigrator<TestMongoDocument, TestMongoDocumentMigratorOneToTwo>();
+        collectionsBuilder.RegisterCollection<TestMongoDocument>("test_collection");
+        collectionsBuilder.RegisterMigrator<TestMongoDocument, TestMongoDocumentMigratorOneToTwo>();
     }
 }

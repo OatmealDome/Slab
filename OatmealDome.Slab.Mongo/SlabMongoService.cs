@@ -13,9 +13,8 @@ public abstract class SlabMongoService : IHostedService
     private readonly MongoClient _client;
     private readonly IMongoDatabase _database;
 
-    private readonly Dictionary<Type, string> _collectionNames = new Dictionary<Type, string>();
-    private readonly Dictionary<Type, SlabMongoDocumentMigrationManager> _migrationManagers =
-        new Dictionary<Type, SlabMongoDocumentMigrationManager>();
+    private Dictionary<Type, string> _collectionNames;
+    private Dictionary<Type, SlabMongoDocumentMigrationManager> _migrationManagers;
     
     protected SlabMongoService(IOptions<SlabMongoConfiguration> options, IServiceProvider serviceProvider)
     {
@@ -29,7 +28,12 @@ public abstract class SlabMongoService : IHostedService
     
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        Setup();
+        SlabMongoCollectionsBuilder collectionsBuilder = new SlabMongoCollectionsBuilder(_serviceProvider);
+        
+        Setup(collectionsBuilder);
+
+        _collectionNames = collectionsBuilder.CollectionNames;
+        _migrationManagers = collectionsBuilder.MigrationManagers;
 
         foreach (KeyValuePair<Type, string> pair in _collectionNames)
         {
@@ -46,32 +50,6 @@ public abstract class SlabMongoService : IHostedService
         
         return Task.CompletedTask;
     }
-    
-    protected void RegisterCollection<T>(string collectionName) where T : SlabMongoDocument, new()
-    {
-        Type type = typeof(T);
-        
-        if (_collectionNames.ContainsKey(type))
-        {
-            throw new SlabException($"A collection for {nameof(T)} is already registered.");
-        }
-        
-        _collectionNames[type] = collectionName;
-        _migrationManagers[type] =
-            new SlabMongoDocumentMigrationManager(_serviceProvider
-                .GetService<ILogger<SlabMongoDocumentMigrationManager>>()!);
-    }
-
-    protected void RegisterMigrator<TDocument, TMigrator>() where TDocument : SlabMongoDocument, new()
-        where TMigrator : SlabMongoDocumentMigrator<TDocument>, new()
-    {
-        if (!_migrationManagers.TryGetValue(typeof(TDocument), out var manager))
-        {
-            throw new SlabException($"No collection registered for type {nameof(TDocument)}");
-        }
-        
-        manager.RegisterMigrator<TDocument, TMigrator>();
-    }
 
     public IMongoCollection<T> GetCollection<T>(string collectionName) where T : SlabMongoDocument
     {
@@ -83,5 +61,5 @@ public abstract class SlabMongoService : IHostedService
         return _database.GetCollection<T>(collectionName);
     }
     
-    protected abstract void Setup();
+    protected abstract void Setup(ISlabMongoCollectionsBuilder collectionsBuilder);
 }
