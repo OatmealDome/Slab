@@ -10,6 +10,8 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
 
     internal List<(Type, JobKey, Action<ITriggerConfigurator>)> RegisteredJobs =
         new List<(Type, JobKey, Action<ITriggerConfigurator>)>();
+
+    public IServiceCollection Services => _hostBuilder.Services;
     
     internal SlabApplicationBuilder(IHostApplicationBuilder hostBuilder)
     {
