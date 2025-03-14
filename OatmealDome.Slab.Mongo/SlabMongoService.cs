@@ -30,7 +30,7 @@ public abstract class SlabMongoService : IHostedService
     {
         SlabMongoCollectionsBuilder collectionsBuilder = new SlabMongoCollectionsBuilder(_serviceProvider);
         
-        Setup(collectionsBuilder);
+        BuildService(collectionsBuilder);
 
         _collectionNames = collectionsBuilder.CollectionNames;
         _migrationManagers = collectionsBuilder.MigrationManagers;
@@ -61,5 +61,5 @@ public abstract class SlabMongoService : IHostedService
         return _database.GetCollection<T>(collectionName);
     }
     
-    protected abstract void Setup(ISlabMongoCollectionsBuilder collectionsBuilder);
+    protected abstract void BuildService(ISlabMongoCollectionsBuilder collectionsBuilder);
 }
