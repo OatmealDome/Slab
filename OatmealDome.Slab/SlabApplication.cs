@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 using Serilog.Sinks.Slack;
 
@@ -36,8 +37,11 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         Log.Logger = loggerConfiguration.CreateLogger();
 
         builder.Services.AddSerilog();
-        
-        Log.Information("Building application");
+
+        using (LogContext.PushProperty("SourceContext", GetType().FullName))
+        {
+            Log.Information("Building application");
+        }
 
         SlabApplicationBuilder applicationBuilder = new SlabApplicationBuilder(builder);
         BuildApplication(applicationBuilder);
@@ -62,8 +66,11 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
         THost host = CreateHost(builder);
         
-        Log.Information("Setting up application");
-        
+        using (LogContext.PushProperty("SourceContext", GetType().FullName))
+        {
+            Log.Information("Setting up application");
+        }
+
         SetupApplication(host);
         
         Log.Warning($"{this.GetType().Name} is starting up");
