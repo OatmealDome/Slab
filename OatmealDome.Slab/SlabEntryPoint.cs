@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Serilog;
+using Serilog.Context;
 using Serilog.Sinks.SystemConsole.Themes;
 
 namespace OatmealDome.Slab;
@@ -19,8 +20,11 @@ public static class SlabEntryPoint
             .WriteTo.Async(c =>
                 c.File("Logs/.log", outputTemplate: LogFormat, rollingInterval: RollingInterval.Day))
             .CreateLogger();
-        
-        Log.Information("Entering RunApplication");
+
+        using (LogContext.PushProperty("SourceContext", typeof(SlabEntryPoint).FullName))
+        {
+            Log.Information("Entering RunApplication");
+        }
         
 #if DEBUG
         DateTime startTime = DateTime.UtcNow;
