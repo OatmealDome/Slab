@@ -5,6 +5,8 @@ namespace OatmealDome.Slab.TestWebApp;
 
 public class TestWebApplication : SlabWebApplication
 {
+    protected override string ApplicationName => "TestWebApplication";
+
     protected override void BuildApplication(ISlabApplicationBuilder appBuilder)
     {
         appBuilder.Services.AddRazorComponents()

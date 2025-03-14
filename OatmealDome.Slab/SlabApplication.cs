@@ -12,6 +12,11 @@ namespace OatmealDome.Slab;
 public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
     where TBuilder : IHostApplicationBuilder where THost : IHost
 {
+    protected abstract string ApplicationName
+    {
+        get;
+    }
+    
     protected SlabApplication()
     {
         //
@@ -72,9 +77,12 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         }
 
         SetupApplication(host);
-        
-        Log.Warning($"{this.GetType().Name} is starting up");
-        
+
+        using (LogContext.PushProperty("SourceContext", GetType().FullName))
+        {
+            Log.Warning($"{ApplicationName} is starting up");
+        }
+
         host.Run();
     }
     

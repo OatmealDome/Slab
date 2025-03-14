@@ -5,6 +5,8 @@ namespace OatmealDome.Slab.TestConsoleApp;
 
 internal sealed class TestApplication : SlabConsoleApplication
 {
+    protected override string ApplicationName => "TestConsoleApp";
+
     protected override void BuildApplication(ISlabApplicationBuilder builder)
     {
         builder.RegisterMongo<TestMongoService>();
