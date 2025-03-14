@@ -1,5 +1,4 @@
 using OatmealDome.Slab.Mongo;
-using Quartz;
 
 namespace OatmealDome.Slab.TestConsoleApp;
 
