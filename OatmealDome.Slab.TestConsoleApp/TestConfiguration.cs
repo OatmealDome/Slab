@@ -7,4 +7,10 @@ internal sealed class TestConfiguration
         get;
         set;
     } = "DefaultValue";
+
+    public string OverriddenByLocalKey
+    {
+        get;
+        set;
+    } = "DefaultValueBySource";
 }

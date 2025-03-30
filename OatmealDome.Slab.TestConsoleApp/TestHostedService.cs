@@ -24,6 +24,7 @@ internal sealed class TestHostedService : IHostedService
     {
         _logger.LogInformation("TestHostedService -> StartAsync");
         _logger.LogInformation("TestConfiguration -> Key = {value}", _settings.Key);
+        _logger.LogInformation("TestConfiguration -> OverriddenByLocalKey = {value}", _settings.OverriddenByLocalKey);
         
         _logger.LogInformation("TestSingletonService.TestMethod() -> {value}", _singleton.TestMethod());
 

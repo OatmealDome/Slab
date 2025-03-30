@@ -29,6 +29,13 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         }
 
         TBuilder builder = CreateBuilder(args);
+
+        if (builder.Environment.EnvironmentName == "Local")
+        {
+            throw new SlabException("Local is a reserved keyword and cannot be an environment name");
+        }
+
+        builder.Configuration.AddJsonFile($"appsettings.Local.json", true, true);
         
         SlabSerilogConfiguration? slabLoggerConfiguration =
             builder.Configuration.GetSection("Serilog").Get<SlabSerilogConfiguration>();
@@ -46,7 +53,7 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         Log.Logger = loggerConfiguration.CreateLogger();
 
         builder.Services.AddSerilog();
-
+        
         using (LogContext.PushProperty("SourceContext", GetType().FullName))
         {
             Log.Information("Building application");
