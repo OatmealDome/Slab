@@ -5,11 +5,11 @@ public static class SlabMongoApplicationBuilderExtensions
     public static void RegisterMongo<T>(this ISlabApplicationBuilder builder, string sectionName = "Mongo")
         where T : SlabMongoService
     {
-        Type jobType = typeof(T);
+        Type type = typeof(T);
 
-        if (jobType == typeof(SlabMongoService))
+        if (type == typeof(SlabMongoService))
         {
-            throw new SlabException("Specified class must be subclass of SlabJob");
+            throw new SlabException("Specified class must be subclass of SlabMongoService");
         }
         
         builder.RegisterConfiguration<SlabMongoConfiguration>(sectionName);
