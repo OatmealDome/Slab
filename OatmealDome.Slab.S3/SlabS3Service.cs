@@ -54,7 +54,7 @@ public sealed class SlabS3Service
         _transferUtility.Upload(request);
     }
 
-    public string GetPreSignedUrlForFile(string name, HttpVerb verb, int validityMinutes = 60)
+    public Task<string> GetPreSignedUrlForFile(string name, HttpVerb verb, int validityMinutes = 60)
     {
         GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
         {
@@ -64,7 +64,7 @@ public sealed class SlabS3Service
             Verb = verb
         };
 
-        return _client.GetPreSignedURL(request);
+        return _client.GetPreSignedURLAsync(request);
     }
 
     public async Task<byte[]> DownloadFile(string name)
