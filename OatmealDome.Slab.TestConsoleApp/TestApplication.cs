@@ -1,4 +1,5 @@
 using OatmealDome.Slab.Mongo;
+using OatmealDome.Slab.S3;
 
 namespace OatmealDome.Slab.TestConsoleApp;
 
@@ -9,6 +10,8 @@ internal sealed class TestApplication : SlabConsoleApplication
     protected override void BuildApplication(ISlabApplicationBuilder builder)
     {
         builder.RegisterMongo<TestMongoService>();
+        
+        builder.RegisterS3();
         
         builder.RegisterSingleton<TestSingletonService>();
         

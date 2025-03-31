@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OatmealDome.Slab.Mongo\OatmealDome.Slab.Mongo.csproj" />
+      <ProjectReference Include="..\OatmealDome.Slab.S3\OatmealDome.Slab.S3.csproj" />
       <ProjectReference Include="..\OatmealDome.Slab\OatmealDome.Slab.csproj" />
     </ItemGroup>
 
