@@ -17,5 +17,5 @@ public interface ISlabApplicationBuilder
 
     void RegisterHostedService<T>() where T : class, IHostedService;
 
-    void RegisterJob<T>(JobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob;
+    void RegisterJob<T>(SlabJobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob;
 }

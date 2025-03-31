@@ -35,7 +35,7 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
             .AddHostedService(services => services.GetService<T>()!);
     }
 
-    public void RegisterJob<T>(JobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob
+    public void RegisterJob<T>(SlabJobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob
     {
         Type jobType = typeof(T);
 
@@ -44,6 +44,6 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
             throw new SlabException("Specified class must be subclass of SlabJob");
         }
         
-        RegisteredJobs.Add((typeof(T), jobKey, configurator));
+        RegisteredJobs.Add((typeof(T), jobKey.QuartzJobKey, configurator));
     }
 }

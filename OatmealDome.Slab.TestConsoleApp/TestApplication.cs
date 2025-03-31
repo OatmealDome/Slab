@@ -1,5 +1,6 @@
 using OatmealDome.Slab.Mongo;
 using OatmealDome.Slab.S3;
+using Quartz;
 
 namespace OatmealDome.Slab.TestConsoleApp;
 
@@ -18,7 +19,7 @@ internal sealed class TestApplication : SlabConsoleApplication
         builder.RegisterConfiguration<TestConfiguration>("Test");
         builder.RegisterHostedService<TestHostedService>();
 
-        builder.RegisterJob<TestJob>(SlabJob.CreateJobKey("TestJob"), t => t
+        builder.RegisterJob<TestJob>(SlabJobKey.Create("TestJob"), t => t
             .StartAt(DateTime.UtcNow.AddSeconds(10)));
     }
 }
