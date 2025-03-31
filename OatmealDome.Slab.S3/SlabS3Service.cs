@@ -28,13 +28,13 @@ public sealed class SlabS3Service
         _transferUtility = new TransferUtility(_client);
     }
     
-    public void TransferFile(string name, byte[] data, string? contentType = null)
+    public async Task TransferFile(string name, byte[] data, string? contentType = null)
     {
         using MemoryStream memoryStream = new MemoryStream(data);
-        TransferFile(name, memoryStream, contentType);
+        await TransferFile(name, memoryStream, contentType);
     }
 
-    public void TransferFile(string name, Stream inputStream, string? contentType = null)
+    public async Task TransferFile(string name, Stream inputStream, string? contentType = null)
     {
         TransferUtilityUploadRequest request = new TransferUtilityUploadRequest()
         {
@@ -51,7 +51,7 @@ public sealed class SlabS3Service
             request.ContentType = contentType;
         }
 
-        _transferUtility.Upload(request);
+        await _transferUtility.UploadAsync(request);
     }
 
     public Task<string> GetPreSignedUrlForFile(string name, HttpVerb verb, int validityMinutes = 60)
