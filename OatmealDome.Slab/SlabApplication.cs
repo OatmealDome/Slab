@@ -64,9 +64,15 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         
         builder.Services.AddQuartz(q =>
         {
+            List<JobKey> jobKeys = new List<JobKey>();
             foreach ((Type type, JobKey jobKey, Action<ITriggerConfigurator> configurator) jobInfo in applicationBuilder.RegisteredJobs)
             {
-                q.AddJob(jobInfo.type, jobInfo.jobKey);
+                if (!jobKeys.Contains(jobInfo.jobKey))
+                {
+                    q.AddJob(jobInfo.type, jobInfo.jobKey);
+                    jobKeys.Add(jobInfo.jobKey);
+                }
+                
                 q.AddTrigger(t =>
                 {
                     jobInfo.configurator.Invoke(t.ForJob(jobInfo.jobKey));

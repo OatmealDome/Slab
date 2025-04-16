@@ -19,7 +19,12 @@ internal sealed class TestApplication : SlabConsoleApplication
         builder.RegisterConfiguration<TestConfiguration>("Test");
         builder.RegisterHostedService<TestHostedService>();
 
-        builder.RegisterJob<TestJob>(SlabJobKey.Create("TestJob"), t => t
+        SlabJobKey jobKey = SlabJobKey.Create("TestJob");
+
+        builder.RegisterJob<TestJob>(jobKey, t => t
             .StartAt(DateTime.UtcNow.AddSeconds(10)));
+
+        builder.RegisterJob<TestJob>(jobKey, t => t
+            .StartAt(DateTime.UtcNow.AddSeconds(15)));
     }
 }
