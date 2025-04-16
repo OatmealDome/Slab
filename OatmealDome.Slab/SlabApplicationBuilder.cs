@@ -8,7 +8,7 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
 {
     private readonly IHostApplicationBuilder _hostBuilder;
 
-    internal List<(Type, JobKey, Action<ITriggerConfigurator>)> RegisteredJobs =
+    internal readonly List<(Type, JobKey, Action<ITriggerConfigurator>)> RegisteredJobs =
         new List<(Type, JobKey, Action<ITriggerConfigurator>)>();
 
     public IServiceCollection Services => _hostBuilder.Services;
