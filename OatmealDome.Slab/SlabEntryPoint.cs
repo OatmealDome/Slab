@@ -51,7 +51,25 @@ public static class SlabEntryPoint
         
         Type appType = typeof(T);
         T app = (T)Activator.CreateInstance(appType)!;
+
+        bool failure = false;
+
+        try
+        {
+            app.Run(args);
+        }
+        catch (Exception e)
+        {
+            failure = true;
+            
+            using (LogContext.PushProperty("SourceContext", typeof(SlabEntryPoint).FullName))
+            {
+                Log.Error(e, "Unhandled exception in application");
+            }
+        }
         
-        app.Run(args);
+        Log.CloseAndFlush();
+        
+        Environment.Exit(failure ? 1 : 0);
     }
 }
