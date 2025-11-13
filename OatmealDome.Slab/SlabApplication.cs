@@ -46,8 +46,8 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         string? slackWebhookUrl = slabLoggerConfiguration?.SlackWebhookUrl;
         if (slabLoggerConfiguration != null && slackWebhookUrl != SlabSerilogConfiguration.DefaultSlackWebhookUrl)
         {
-            loggerConfiguration = loggerConfiguration.WriteTo.Async(c =>
-                c.Slack(slackWebhookUrl, restrictedToMinimumLevel: LogEventLevel.Warning));
+            loggerConfiguration = loggerConfiguration.WriteTo.Async(c => c.Slack(slackWebhookUrl,
+                restrictedToMinimumLevel: LogEventLevel.Warning, outputTemplate: "{Message:lj}"));
         }
         
         Log.Logger = loggerConfiguration.CreateLogger();
