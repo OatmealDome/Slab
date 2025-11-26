@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
@@ -12,6 +13,8 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
         new List<(Type, JobKey, Action<ITriggerConfigurator>)>();
 
     public IServiceCollection Services => _hostBuilder.Services;
+    
+    public IConfigurationManager Configuration  => _hostBuilder.Configuration;
     
     internal SlabApplicationBuilder(IHostApplicationBuilder hostBuilder)
     {

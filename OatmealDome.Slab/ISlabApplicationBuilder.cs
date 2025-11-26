@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
@@ -7,6 +8,11 @@ namespace OatmealDome.Slab;
 public interface ISlabApplicationBuilder
 {
     IServiceCollection Services
+    {
+        get;
+    }
+
+    IConfigurationManager Configuration
     {
         get;
     }
