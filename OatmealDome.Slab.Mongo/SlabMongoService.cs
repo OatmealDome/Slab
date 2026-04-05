@@ -1,43 +1,45 @@
-﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace OatmealDome.Slab.Mongo;
 
-public abstract class SlabMongoService : IHostedService
+public sealed class SlabMongoService : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly SlabMongoRegistry _registry;
     private readonly MongoClient _client;
     private readonly IMongoDatabase _database;
+    private readonly ILogger<SlabMongoDocumentMigrationManager> _migrationLogger;
 
-    private Dictionary<Type, string> _collectionNames;
-    private Dictionary<Type, SlabMongoDocumentMigrationManager> _migrationManagers;
-    
-    protected SlabMongoService(IOptions<SlabMongoConfiguration> options, IServiceProvider serviceProvider)
+    public SlabMongoService(IOptions<SlabMongoConfiguration> options, SlabMongoRegistry registry,
+        ILogger<SlabMongoDocumentMigrationManager> migrationLogger)
     {
         SlabMongoConfiguration configuration = options.Value;
-        
+
         _client = new MongoClient(configuration.ConnectionString);
         _database = _client.GetDatabase(configuration.Database);
-        
-        _serviceProvider = serviceProvider;
+        _registry = registry;
+        _migrationLogger = migrationLogger;
     }
-    
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        SlabMongoCollectionsBuilder collectionsBuilder = new SlabMongoCollectionsBuilder(_serviceProvider);
-        
-        BuildService(collectionsBuilder);
-
-        _collectionNames = collectionsBuilder.CollectionNames;
-        _migrationManagers = collectionsBuilder.MigrationManagers;
-
-        foreach (KeyValuePair<Type, string> pair in _collectionNames)
+        foreach (KeyValuePair<Type, string> pair in _registry.CollectionNames)
         {
             IMongoCollection<BsonDocument> collection = _database.GetCollection<BsonDocument>(pair.Value);
-            
-            SlabMongoDocumentMigrationManager manager = _migrationManagers[pair.Key];
+
+            SlabMongoDocumentMigrationManager manager = new SlabMongoDocumentMigrationManager(_migrationLogger);
+
+            if (_registry.Migrators.TryGetValue(pair.Key, out List<SlabMongoDocumentMigrator>? migrators))
+            {
+                foreach (SlabMongoDocumentMigrator migrator in migrators)
+                {
+                    manager.RegisterMigrator(migrator);
+                }
+            }
+
             await manager.PerformMigration(collection);
         }
     }
@@ -45,19 +47,17 @@ public abstract class SlabMongoService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _client.Dispose();
-        
+
         return Task.CompletedTask;
     }
 
     public IMongoCollection<T> GetCollection<T>(string collectionName) where T : SlabMongoDocument
     {
-        if (!_collectionNames.ContainsKey(typeof(T)))
+        if (!_registry.CollectionNames.ContainsKey(typeof(T)))
         {
             throw new SlabException($"No collection registered for type {nameof(T)}");
         }
-        
+
         return _database.GetCollection<T>(collectionName);
     }
-    
-    protected abstract void BuildService(ISlabMongoCollectionsBuilder collectionsBuilder);
 }

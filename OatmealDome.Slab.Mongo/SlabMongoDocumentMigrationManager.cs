@@ -48,6 +48,11 @@ public class SlabMongoDocumentMigrationManager
         }
     }
 
+    internal void RegisterMigrator(SlabMongoDocumentMigrator migrator)
+    {
+        _migrators.Add(migrator);
+    }
+
     public void RegisterMigrator<TDocument, TMigrator>()  where TDocument : SlabMongoDocument, new()
         where TMigrator : SlabMongoDocumentMigrator<TDocument>, new()
     {

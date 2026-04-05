@@ -10,7 +10,9 @@ internal sealed class TestApplication : SlabConsoleApplication
 
     protected override void BuildApplication(ISlabApplicationBuilder builder)
     {
-        builder.RegisterMongo<TestMongoService>();
+        builder.RegisterMongo(b => b
+            .AddCollection<TestMongoDocument>("test_collection")
+            .AddMigrator<TestMongoDocument, TestMongoDocumentMigratorOneToTwo>());
         
         builder.RegisterS3();
         

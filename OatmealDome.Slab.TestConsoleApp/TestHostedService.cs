@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using OatmealDome.Slab.Mongo;
 using OatmealDome.Slab.S3;
 
 namespace OatmealDome.Slab.TestConsoleApp;
@@ -11,11 +12,11 @@ internal sealed class TestHostedService : IHostedService
     private readonly ILogger<TestHostedService> _logger;
     private readonly TestConfiguration _settings;
     private readonly TestSingletonService _singleton;
-    private readonly TestMongoService _mongoService;
+    private readonly SlabMongoService _mongoService;
     private readonly SlabS3Service _s3Service;
 
     public TestHostedService(ILogger<TestHostedService> logger, IOptions<TestConfiguration> settings,
-        TestSingletonService singleton, TestMongoService mongoService, SlabS3Service s3Service)
+        TestSingletonService singleton, SlabMongoService mongoService, SlabS3Service s3Service)
     {
         _logger = logger;
         _settings = settings.Value;

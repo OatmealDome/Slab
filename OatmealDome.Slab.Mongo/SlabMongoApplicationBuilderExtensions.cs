@@ -1,18 +1,17 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace OatmealDome.Slab.Mongo;
 
 public static class SlabMongoApplicationBuilderExtensions
 {
-    public static void RegisterMongo<T>(this ISlabApplicationBuilder builder, string sectionName = "Mongo")
-        where T : SlabMongoService
+    public static void RegisterMongo(this ISlabApplicationBuilder builder,
+        Action<ISlabMongoBuilder> serviceConfigurator, string sectionName = "Mongo")
     {
-        Type type = typeof(T);
-
-        if (type == typeof(SlabMongoService))
-        {
-            throw new SlabException("Specified class must be subclass of SlabMongoService");
-        }
+        SlabMongoBuilder mongoBuilder = new SlabMongoBuilder();
+        serviceConfigurator(mongoBuilder);
         
         builder.RegisterConfiguration<SlabMongoConfiguration>(sectionName);
-        builder.RegisterHostedService<T>();
+        builder.Services.AddSingleton(mongoBuilder.Registry);
+        builder.RegisterHostedService<SlabMongoService>();
     }
 }
