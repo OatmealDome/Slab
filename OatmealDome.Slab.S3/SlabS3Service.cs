@@ -92,4 +92,22 @@ public sealed class SlabS3Service
 
         await _client.DeleteObjectAsync(request);
     }
+
+    public async Task<bool> CheckIfFileExists(string name)
+    {
+        try
+        {
+            await _client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
+            {
+                BucketName = _settings.Bucket,
+                Key = name
+            });
+
+            return true;
+        }
+        catch (AmazonS3Exception exception) when (exception.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+    }
 }
