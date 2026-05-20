@@ -9,7 +9,7 @@ public class SlabMongoBuilder : ISlabMongoBuilder
         //
     }
 
-    public ISlabMongoBuilder AddCollection<T>(string collectionName) where T : SlabMongoDocument, new()
+    public ISlabMongoBuilder AddCollection<T>(string collectionName) where T : SlabMongoDocument
     {
         Type type = typeof(T);
 

@@ -2,7 +2,7 @@ namespace OatmealDome.Slab.Mongo;
 
 public interface ISlabMongoBuilder
 {
-    ISlabMongoBuilder AddCollection<T>(string collectionName) where T : SlabMongoDocument, new();
+    ISlabMongoBuilder AddCollection<T>(string collectionName) where T : SlabMongoDocument;
 
     ISlabMongoBuilder AddMigrator<TDocument, TMigrator>()
         where TDocument : SlabMongoDocument, new()
