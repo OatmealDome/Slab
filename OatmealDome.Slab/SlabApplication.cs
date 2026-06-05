@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using Serilog;
@@ -85,6 +86,8 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         {
             options.WaitForJobsToComplete = true;
         });
+
+        builder.Services.AddSingleton(new SlabEmbeddedResourceService(GetType().Assembly));
 
         THost host = CreateHost(builder);
         
