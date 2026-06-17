@@ -110,4 +110,15 @@ public sealed class SlabS3Service
             return false;
         }
     }
+
+    public async Task<string?> GetFileContentType(string name)
+    {
+        GetObjectMetadataResponse response = await _client.GetObjectMetadataAsync(new GetObjectMetadataRequest()
+        {
+            BucketName = _settings.Bucket,
+            Key = name
+        });
+
+        return response.Headers.ContentType;
+    }
 }
