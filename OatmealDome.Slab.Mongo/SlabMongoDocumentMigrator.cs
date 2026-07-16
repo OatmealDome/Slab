@@ -4,6 +4,11 @@ namespace OatmealDome.Slab.Mongo;
 
 public abstract class SlabMongoDocumentMigrator
 {
+    public abstract Type DocumentType
+    {
+        get;
+    }
+
     public abstract int OldSchemaVersion
     {
         get;
@@ -23,8 +28,10 @@ public abstract class SlabMongoDocumentMigrator
 }
 
 
-public abstract class SlabMongoDocumentMigrator<T> : SlabMongoDocumentMigrator where T : SlabMongoDocument, new()
+public abstract class SlabMongoDocumentMigrator<T> : SlabMongoDocumentMigrator where T : SlabMongoDocument
 {
+    public override Type DocumentType => typeof(T);
+    
     protected SlabMongoDocumentMigrator() : base()
     {
         

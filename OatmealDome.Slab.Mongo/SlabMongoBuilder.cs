@@ -25,18 +25,28 @@ public class SlabMongoBuilder : ISlabMongoBuilder
     }
 
     public ISlabMongoBuilder AddMigrator<TDocument, TMigrator>()
-        where TDocument : SlabMongoDocument, new()
+        where TDocument : SlabMongoDocument
         where TMigrator : SlabMongoDocumentMigrator<TDocument>, new()
     {
-        Type docType = typeof(TDocument);
+        Type documentType = typeof(TDocument);
+        Type[] matchingCollectionTypes = Registry.CollectionNames.Keys
+            .Where(collectionType => collectionType.IsAssignableFrom(documentType))
+            .ToArray();
 
-        if (!Registry.Migrators.ContainsKey(docType))
+        if (matchingCollectionTypes.Length == 0)
         {
             throw new SlabException(
-                $"No collection registered for type {docType.Name}. Call AddCollection first.");
+                $"No collection registered for type {documentType.Name} or one of its base types. Call AddCollection first.");
         }
 
-        Registry.Migrators[docType].Add(new TMigrator());
+        if (matchingCollectionTypes.Length > 1)
+        {
+            throw new SlabException($"More than one registered collection can contain {documentType.Name}: " +
+                                    string.Join(", ", matchingCollectionTypes.Select(t => t.Name)));
+        }
+
+        Type collectionType = matchingCollectionTypes[0];
+        Registry.Migrators[collectionType].Add(new TMigrator());
 
         return this;
     }

@@ -5,6 +5,6 @@ public interface ISlabMongoBuilder
     ISlabMongoBuilder AddCollection<T>(string collectionName) where T : SlabMongoDocument;
 
     ISlabMongoBuilder AddMigrator<TDocument, TMigrator>()
-        where TDocument : SlabMongoDocument, new()
+        where TDocument : SlabMongoDocument
         where TMigrator : SlabMongoDocumentMigrator<TDocument>, new();
 }
