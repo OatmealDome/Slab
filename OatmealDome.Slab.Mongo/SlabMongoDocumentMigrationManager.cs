@@ -22,7 +22,7 @@ public class SlabMongoDocumentMigrationManager
             {
                 Type documentType = migrator.DocumentType;
 
-                if (!documentType.IsAbstract && documentType.BaseType != null)
+                if (!documentType.IsAbstract && documentType.BaseType != typeof(SlabMongoDocument))
                 {
                     BsonArray typeArray = document["_t"].AsBsonArray;
 
