@@ -61,7 +61,10 @@ public sealed class SlabS3Service
             BucketName = _settings.Bucket,
             Key = name,
             Expires = DateTime.UtcNow.AddMinutes(validityMinutes),
-            Verb = verb
+            Verb = verb,
+            Protocol = new Uri(_settings.ServiceUrl).Scheme == Uri.UriSchemeHttp
+                ? Protocol.HTTP
+                : Protocol.HTTPS
         };
 
         return _client.GetPreSignedURLAsync(request);
