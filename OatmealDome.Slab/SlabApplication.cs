@@ -31,7 +31,9 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
         TBuilder builder = CreateBuilder(args);
 
-        if (builder.Environment.EnvironmentName == "Local")
+        EnvironmentName = builder.Environment.EnvironmentName;
+
+        if (EnvironmentName == "Local")
         {
             throw new SlabException("Local is a reserved keyword and cannot be an environment name");
         }
