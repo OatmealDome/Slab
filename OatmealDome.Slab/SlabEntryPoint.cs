@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Context;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -7,6 +8,8 @@ namespace OatmealDome.Slab;
 
 public static class SlabEntryPoint
 {
+    private static readonly TimeSpan ProductionFailureExitDelay = TimeSpan.FromSeconds(15);
+
     private const string LogFormat =
         "[{Timestamp:MM-dd-yyyy HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
     
@@ -69,6 +72,11 @@ public static class SlabEntryPoint
         }
         
         Log.CloseAndFlush();
+
+        if (failure && app.EnvironmentName == Environments.Production)
+        {
+            Thread.Sleep(ProductionFailureExitDelay);
+        }
         
         Environment.Exit(failure ? 1 : 0);
     }
