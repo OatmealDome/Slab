@@ -89,6 +89,9 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
 
         builder.Services.AddSingleton(new SlabEmbeddedResourceService(GetType().Assembly));
 
+        builder.Services.Configure<SlabPersistentDataConfiguration>(builder.Configuration.GetSection("PersistentData"));
+        builder.Services.AddSingleton<SlabPersistentDataService>();
+
         THost host = CreateHost(builder);
         
         using (LogContext.PushProperty("SourceContext", GetType().FullName))
