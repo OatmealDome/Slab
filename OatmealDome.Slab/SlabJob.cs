@@ -4,11 +4,11 @@ namespace OatmealDome.Slab;
 
 public abstract class SlabJob : IJob
 {
-    public Task Execute(IJobExecutionContext context)
+    public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken)
     {
         try
         {
-            return Run(context);
+            return new ValueTask(Run(context));
         }
         catch (Exception e)
         {

@@ -9,8 +9,7 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
 {
     private readonly IHostApplicationBuilder _hostBuilder;
 
-    internal readonly List<(Type, JobKey, Action<ITriggerConfigurator>)> RegisteredJobs =
-        new List<(Type, JobKey, Action<ITriggerConfigurator>)>();
+    internal readonly List<(Type, JobKey, Action<ITriggerConfigurator<IJob>>)> RegisteredJobs = [];
 
     public IServiceCollection Services => _hostBuilder.Services;
     
@@ -38,7 +37,7 @@ public class SlabApplicationBuilder : ISlabApplicationBuilder
             .AddHostedService(services => services.GetService<T>()!);
     }
 
-    public void RegisterJob<T>(SlabJobKey jobKey, Action<ITriggerConfigurator> configurator) where T : SlabJob
+    public void RegisterJob<T>(SlabJobKey jobKey, Action<ITriggerConfigurator<IJob>> configurator) where T : SlabJob
     {
         Type jobType = typeof(T);
 

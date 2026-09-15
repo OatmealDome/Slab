@@ -68,11 +68,11 @@ public abstract class SlabApplication<TBuilder, THost> : SlabApplicationBase
         builder.Services.AddQuartz(q =>
         {
             List<JobKey> jobKeys = new List<JobKey>();
-            foreach ((Type type, JobKey jobKey, Action<ITriggerConfigurator> configurator) jobInfo in applicationBuilder.RegisteredJobs)
+            foreach ((Type type, JobKey jobKey, Action<ITriggerConfigurator<IJob>> configurator) jobInfo in applicationBuilder.RegisteredJobs)
             {
                 if (!jobKeys.Contains(jobInfo.jobKey))
                 {
-                    q.AddJob(jobInfo.type, jobInfo.jobKey);
+                    q.AddJob(jobInfo.type, job => job.WithIdentity(jobInfo.jobKey));
                     jobKeys.Add(jobInfo.jobKey);
                 }
                 
