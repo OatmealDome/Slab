@@ -60,4 +60,7 @@ public sealed class SlabMongoService : IHostedService
 
         return _database.GetCollection<T>(collectionName);
     }
+
+    public Task<IClientSessionHandle> StartSessionAsync(CancellationToken cancellationToken = default)
+        => _client.StartSessionAsync(cancellationToken: cancellationToken);
 }
